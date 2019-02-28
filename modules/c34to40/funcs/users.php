@@ -3,13 +3,17 @@
 /**
  * @Project NUKEVIET 4.x
  * @Author VINADES.,JSC (contact@vinades.vn)
- * @Copyright (C) 2014 VINADES.,JSC.
- * All rights reserved
+ * @Copyright (C) 2014 VINADES.,JSC. All rights reserved
  * @License GNU/GPL version 2 or any later version
  * @Createdate 31/05/2010, 00:36
  */
 
-if (!defined('NV_IS_MOD_C34TO40')) die('Stop!!!');
+if (!defined('NV_IS_MOD_C34TO40'))
+    die('Stop!!!');
+
+$my_head .= '<link href="' . NV_BASE_SITEURL . NV_EDITORSDIR . '/ckeditor/plugins/codesnippet/lib/highlight/styles/github.css" rel="stylesheet">';
+$my_head .= '<script src="' . NV_BASE_SITEURL . NV_EDITORSDIR . '/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js"></script>';
+$my_head .= '<script>hljs.initHighlightingOnLoad();</script>';
 
 $xtpl = new XTemplate($op . '.tpl', NV_ROOTDIR . '/themes/' . $module_info['template'] . '/modules/' . $module_file);
 $xtpl->assign('LANG', $lang_module);
@@ -46,52 +50,76 @@ include NV_ROOTDIR . '/includes/header.php';
 echo nv_site_theme($contents);
 include NV_ROOTDIR . '/includes/footer.php';
 
+/**
+ * c_user()
+ *
+ * @return
+ */
 function c_user()
 {
     global $global_config, $db;
-    
-    try {
-        // kiểm tra xem các trường của bảng nv3 đã được tạo trong bảng nv4_users_field hay chưa
-        $_sql = 'SELECT count(*) FROM ' . NV4_PREFIX . '_users_field';
-        $err = "";
-        $num_items = $db->query($_sql)->fetchColumn();
-        if ($num_items == 0) {
-            // neu chua co thi insert cac truong nay vao
-            $sql = "INSERT INTO " . NV4_PREFIX . "_users_field (fid, field, weight, field_type, field_choices, sql_choices, match_type, match_regex, func_callback, min_length, max_length, required, show_register, user_editable, show_profile, class, language, default_value) VALUES
-    		(1, 'website', 1, 'textbox', '', '', 'none', '', '', 0, 255, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:7:\"website\";i:1;s:0:\"\";}}', ''),
-    		(2, 'location', 2, 'textbox', '', '', 'none', '', '', 0, 255, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:12:\"Địa chỉ\";i:1;s:0:\"\";}}', ''),
-    		(3, 'yim', 3, 'textbox', '', '', 'none', '', '', 0, 255, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:5:\"yahoo\";i:1;s:0:\"\";}}', ''),
-    		(4, 'mobile', 4, 'textbox', '', '', 'none', '', '', 0, 100, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:6:\"mobile\";i:1;s:0:\"\";}}', ''),
-    		(5, 'fax', 5, 'textbox', '', '', 'none', '', '', 0, 100, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:3:\"fax\";i:1;s:0:\"\";}}', ''),
-    		(6, 'telephone', 6, 'textbox', '', '', 'none', '', '', 0, 100, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:9:\"telephone\";i:1;s:0:\"\";}}', '')";
-            
-            if (!$db->exec($sql)) {
-                $err .= "Lỗi bảng " . NV4_PREFIX . "_users_field </br>";
-            }
-            
-            // insert vao bang nv4_users_field
-            // cap nhat vao bang nv4_users_info
-            $sql_i = "ALTER TABLE " . NV4_PREFIX . "_users_info ADD website varchar(255) NOT NULL DEFAULT '',";
-            $sql_i .= "ADD location varchar(255) NOT NULL DEFAULT '',";
-            $sql_i .= "ADD yim varchar(255) NOT NULL DEFAULT '',";
-            $sql_i .= "ADD telephone varchar(100) NOT NULL DEFAULT '',";
-            $sql_i .= "ADD fax varchar(100) NOT NULL DEFAULT '',";
-            $sql_i .= "ADD mobile varchar(100) NOT NULL DEFAULT ''";
-            
-            if (!$db->query($sql_i)) {
-                $err .= "Lỗi bảng " . NV4_PREFIX . "_users_info </br>";
-            }
+
+    // Kiểm tra xem các trường của bảng nv3 đã được tạo trong bảng nv4_users_field hay chưa
+    $_sql = 'SELECT count(*) FROM ' . NV4_PREFIX . '_users_field';
+    $err = "";
+
+    $num_items = $db->query($_sql)->fetchColumn();
+    if ($num_items == 7) {
+        // neu chua co thi insert cac truong nay vao
+        $sql = "INSERT INTO " . NV4_PREFIX . "_users_field (
+            fid, field, weight, field_type, field_choices, sql_choices, match_type, match_regex, func_callback, min_length, max_length,
+            required, show_register, user_editable, show_profile, class, language, default_value
+        ) VALUES
+            (8, 'website', 8, 'textbox', '', '', 'none', '', '', 0, 255, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:7:\"website\";i:1;s:0:\"\";}}', ''),
+            (9, 'location', 9, 'textbox', '', '', 'none', '', '', 0, 255, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:12:\"Địa chỉ\";i:1;s:0:\"\";}}', ''),
+            (10, 'yim', 10, 'textbox', '', '', 'none', '', '', 0, 255, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:5:\"yahoo\";i:1;s:0:\"\";}}', ''),
+            (11, 'mobile', 11, 'textbox', '', '', 'none', '', '', 0, 100, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:6:\"mobile\";i:1;s:0:\"\";}}', ''),
+            (12, 'fax', 12, 'textbox', '', '', 'none', '', '', 0, 100, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:3:\"fax\";i:1;s:0:\"\";}}', ''),
+            (13, 'telephone', 13, 'textbox', '', '', 'none', '', '', 0, 100, 0, 1, 1, 1, 'input', 'a:1:{s:2:\"vi\";a:2:{i:0;s:9:\"telephone\";i:1;s:0:\"\";}}', '')
+        ";
+
+        try {
+            $db->query($sql);
+        } catch (PDOException $e) {
+            $err .= "Lỗi bảng " . NV4_PREFIX . "_users_field<br />";
         }
-        
+
+        // insert vao bang nv4_users_field
+        // cap nhat vao bang nv4_users_info
+        $sql_i = "ALTER TABLE " . NV4_PREFIX . "_users_info ADD website varchar(255) NOT NULL DEFAULT '',";
+        $sql_i .= "ADD location varchar(255) NOT NULL DEFAULT '',";
+        $sql_i .= "ADD yim varchar(255) NOT NULL DEFAULT '',";
+        $sql_i .= "ADD telephone varchar(100) NOT NULL DEFAULT '',";
+        $sql_i .= "ADD fax varchar(100) NOT NULL DEFAULT '',";
+        $sql_i .= "ADD mobile varchar(100) NOT NULL DEFAULT ''";
+
+        try {
+            $db->query($sql_i);
+        } catch (PDOException $e) {
+            $err .= "Lỗi bảng " . NV4_PREFIX . "_users_info<br />";
+        }
+    }
+
+    $nv3_exists = true;
+    try {
+        $sql = 'SELECT * FROM ' . NV3_PREFIX . '_users';
+        $queryUsers = $db->query($sql);
+    } catch (PDOException $e) {
+        $nv3_exists = false;
+        $err .= "Lỗi: Chưa import CSDL thành viên NukeViet 3 vào";
+    }
+
+    if ($nv3_exists) {
         $db->exec('TRUNCATE TABLE ' . NV4_PREFIX . '_users_info');
-        // xóa dữ liệu bảng cũ đi
+        // Xóa dữ liệu bảng cũ đi
         $db->exec('TRUNCATE TABLE ' . NV4_PREFIX . '_users');
-        
-        $_sql = 'SELECT * FROM ' . NV3_PREFIX . '_users';
-        $_query = $db->query($_sql);
-        
-        while ($row = $_query->fetch()) {
-            $sql = "INSERT INTO " . NV4_PREFIX . "_users(userid, group_id, username, md5username, password,
+        // Xóa hết các backupcode
+        $db->exec('TRUNCATE TABLE ' . NV4_PREFIX . '_users_backupcodes');
+        // Xóa hết các thiết lập nhóm
+        $db->exec('TRUNCATE TABLE ' . NV4_PREFIX . '_users_groups_users');
+
+        while ($row = $queryUsers->fetch()) {
+            $sql = "INSERT INTO " . NV4_PREFIX . "_users (userid, group_id, username, md5username, password,
                 email, first_name, last_name, gender, photo, birthday, sig,
                 regdate, question, answer, passlostkey, view_mail, remember,
                 in_groups, active, checknum, last_login, last_ip, last_agent,
@@ -99,10 +127,16 @@ function c_user()
                 VALUES (:userid,:group_id,:username,:md5username,:password,:email,:first_name,:last_name,
                 :gender,:photo,:birthday,:sig,:regdate,:question,:answer,
                 :passlostkey,:view_mail,:remember,:in_groups,:active,:checknum,:last_login,
-                :last_ip,:last_agent,:last_openid,:idsite)";
+                :last_ip,:last_agent,:last_openid,:idsite
+            )";
+
+            if (strlen($row['password']) == 32) {
+                $row['password'] = '{MD5}' . $row['password'];
+            }
+
             $data_insert = array();
             $data_insert['userid'] = $row['userid'];
-            $data_insert['group_id'] = 0;
+            $data_insert['group_id'] = 4; // Mặc định là thành viên chính thức cả
             $data_insert['username'] = $row['username'];
             $data_insert['md5username'] = nv_md5safe($row['username']);
             $data_insert['password'] = $row['password'];
@@ -127,18 +161,24 @@ function c_user()
             $data_insert['last_agent'] = $row['last_agent'];
             $data_insert['last_openid'] = $row['last_openid'];
             $data_insert['idsite'] = $global_config['idsite'];
+
             try {
                 $userid = intval($db->insert_id($sql, 'userid', $data_insert));
             } catch (PDOException $e) {
-                echo 'Trùng tài khoản đổi tài khoản: ' . $row['username'];
+                $err .= 'Trùng tài khoản đổi tài khoản: ' . $row['username'];
                 $data_insert['username'] = $row['username'] . '-' . $userid;
                 $data_insert['md5username'] = nv_md5safe($row['username']);
                 $userid = intval($db->insert_id($sql, 'userid', $data_insert));
-                echo '---->' . $row['username'] . '<br>';
+                $err .= '---->' . $row['username'] . '<br>';
             }
+
             if (!empty($userid)) {
-                $sql_info = "INSERT INTO " . NV4_PREFIX . "_users_info(userid, website, location, yim, telephone, fax, mobile)
-			         VALUES (:userid,:website,:location,:yim,:telephone,:fax,:mobile)";
+                $sql_info = "INSERT INTO " . NV4_PREFIX . "_users_info(
+                    userid, website, location, yim, telephone, fax, mobile
+                ) VALUES (
+                    :userid,:website,:location,:yim,:telephone,:fax,:mobile
+                )";
+
                 $data_insert_info = array();
                 $data_insert_info['userid'] = $userid;
                 $data_insert_info['website'] = $row['website'];
@@ -152,16 +192,38 @@ function c_user()
                 $err .= "Lỗi insert user: " . $userid . " </br>";
             }
         }
-        
+
         // Cập nhật dữ liệu quản trị.
-        
         $db->exec('TRUNCATE TABLE ' . NV4_PREFIX . '_authors');
-        $db->query('INSERT ' . NV4_PREFIX . '_authors SELECT * FROM ' . NV3_PREFIX . '_authors');
-    } catch (PDOException $e) {
-        var_dump($e);
-        die();
-        trigger_error($e->getMessage());
+
+        try {
+            $db->query('INSERT ' . NV4_PREFIX . '_authors (
+                admin_id, editor, lev, files_level, position, addtime, edittime, is_suspend, susp_reason, check_num, last_login, last_ip, last_agent
+            ) SELECT
+                admin_id, editor, lev, files_level, position, addtime, edittime, is_suspend, susp_reason, check_num, last_login, last_ip, last_agent
+            FROM ' . NV3_PREFIX . '_authors');
+        } catch (PDOException $e) {
+            $err .= "Lỗi không tương thích cấu trúc của bảng quản trị, các tài khoản quản trị không được chuyển, vui lòng xem lại <br />";
+        }
+
+        // Cập nhật lại số lượng thành viên trong các nhóm bằng 0
+        $db->exec('UPDATE ' . NV4_PREFIX . '_users_groups SET numbers=0');
+
+        // Cập nhật lại số thành viên
+        $db->exec('UPDATE ' . NV4_PREFIX . '_users_groups SET numbers=(SELECT COUNT(*) FROM ' . NV4_PREFIX . '_users WHERE group_id=4) WHERE group_id=4');
+
+        // Cập nhật lại thống kê số lượng các quản trị site
+        $sql = "SELECT * FROM " . NV4_PREFIX . "_authors";
+        $result = $db->query($sql);
+        while ($row = $result->fetch()) {
+            $db->query("UPDATE " . NV4_PREFIX . "_users_groups SET numbers=numbers+1 WHERE group_id=" . $row['lev']);
+            $db->query("INSERT INTO " . NV4_PREFIX . "_users_groups_users (
+                group_id, userid, is_leader, approved, data
+            ) VALUES (
+                " . $row['lev'] . ", " . $row['admin_id'] . ", 0, 1, ''
+            )");
+        }
     }
-    
+
     return $err;
 }
